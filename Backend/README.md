@@ -219,3 +219,119 @@ Registers a new captain by accepting required data, validating it, and creating 
   ]
 }
 ```
+
+# Captain Routes Documentation
+
+This section provides examples for the captain endpoints with annotated JSON.
+
+## POST /register
+### Request Body Example:
+```json
+{
+  // email must be a valid email address
+  "email": "captain@example.com",
+  "fullname": {
+    // firstname is required, minimum 3 characters
+    "firstname": "Jane",
+    // lastname is optional, if provided must be at least 3 characters
+    "lastname": "Doe"
+  },
+  // password is required, minimum 6 characters
+  "password": "password123",
+  "vehicle": {
+    // color is required, minimum 3 characters
+    "color": "Red",
+    // plate is required, minimum 3 characters
+    "plate": "XYZ123",
+    // capacity is required, a positive integer (minimum 1)
+    "capacity": 4,
+    // vehicleType is required; must be one of "car", "motorcycle", or "auto"
+    "vehicleType": "car"
+  }
+}
+```
+
+### Success Response Example:
+```json
+{
+  // JWT token for authentication
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "captain": {
+    "id": "603d2149e8e8a50b8c4e4a20",
+    "email": "captain@example.com",
+    "fullname": {
+      "firstname": "Jane",
+      "lastname": "Doe"
+    },
+    "vehicle": {
+      "color": "Red",
+      "plate": "XYZ123",
+      "capacity": 4,
+      "vehicleType": "car"
+    }
+  }
+}
+```
+
+## POST /login
+### Request Body Example:
+```json
+{
+  // email must be a valid email address
+  "email": "captain@example.com",
+  // password is required, minimum 6 characters
+  "password": "password123"
+}
+```
+
+### Success Response Example:
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "captain": {
+    "id": "603d2149e8e8a50b8c4e4a20",
+    "email": "captain@example.com",
+    "fullname": {
+      "firstname": "Jane",
+      "lastname": "Doe"
+    },
+    "vehicle": {
+      "color": "Red",
+      "plate": "XYZ123",
+      "capacity": 4,
+      "vehicleType": "car"
+    }
+  }
+}
+```
+
+## GET /profile
+### Success Response Example:
+```json
+{
+  "captain": {
+    "id": "603d2149e8e8a50b8c4e4a20",
+    "email": "captain@example.com",
+    "fullname": {
+      "firstname": "Jane",
+      "lastname": "Doe"
+    },
+    "vehicle": {
+      "color": "Red",
+      "plate": "XYZ123",
+      "capacity": 4,
+      "vehicleType": "car"
+    }
+    // ...other captain-specific fields...
+  }
+}
+```
+
+## GET /logout
+### Success Response Example:
+```json
+{
+  // Message indicating successful logout and token blacklisting
+  "message": "Captain logged out successfully"
+}
+```
