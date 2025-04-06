@@ -8,12 +8,14 @@ const connectToDb = require('./db/db.js');
 const userRoutes = require('./routes/user.route.js');
 const cookieParser = require('cookie-parser');
 const captainRoutes = require('./routes/captain.route.js');
+const mapsRoutes = require('./routes/maps.route.js');
+const rideRoutes = require('./routes/ride.route.js');
 
 connectToDb();
 
-app.use(cors());
-app.use(express.json()); 
-app.use(express.urlencoded({ extended: true }));
+app.use(cors()); // Enables CORS middleware for handling cross-origin requests
+app.use(express.json()); //// is middleware in Express.js that parses incoming JSON payloads in HTTP requests. It allows you to access request body data in JSON format through `req.body`. This is essential for handling POST/PUT requests that contain JSON data.
+app.use(express.urlencoded({ extended: true })); // Middleware to parse URL-encoded bodies (as sent by HTML forms)
 app.use(cookieParser());
 
 app.get('/', (req, res) => {
@@ -22,6 +24,8 @@ app.get('/', (req, res) => {
 
 app.use('/users', userRoutes);
 app.use('/captains', captainRoutes);
+app.use('/maps', mapsRoutes);
+app.use('/rides', rideRoutes);
 
 
 module.exports = app;

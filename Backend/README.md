@@ -335,3 +335,208 @@ This section provides examples for the captain endpoints with annotated JSON.
   "message": "Captain logged out successfully"
 }
 ```
+
+
+
+
+# Ride Routes Documentation
+
+## POST /rides/create
+### Description
+Creates a new ride request.
+
+### Required Data
+- **pickup**: The pickup location (string, minimum 3 characters).
+- **destination**: The destination location (string, minimum 3 characters).
+- **vehicleType**: The type of vehicle (must be one of 'auto', 'car', or 'moto').
+
+### Headers
+- `Authorization`: Bearer token (or token in cookies).
+
+### Success Response
+- **Status Code**: 201 Created
+- **Response Body**: 
+  - `ride`: The newly created ride object.
+
+### Error Response
+- **Status Code**: 400 Bad Request
+- **Response Body**: 
+  - `errors`: Array of validation error messages.
+
+- **Status Code**: 500 Internal Server Error
+- **Response Body**: 
+  - `message`: Error message.
+
+### Example Response
+**Success Response Example:**
+```json
+{
+  "ride": {
+    "user": "603d2149e8e8a50b8c4e4a20",
+    "pickup": "Dwarka Sector-14, Delhi",
+    "destination": "Connaught Place, Delhi",
+    "fare": 193,
+    "status": "pending",
+    "otp": "123456",
+    "_id": "64f8c2e5b2f4c2a1b8e4d123"
+  }
+}
+```
+
+---
+
+## GET /rides/get-fare
+### Description
+Calculates the fare for a ride based on the pickup and destination locations.
+
+### Query Parameters
+- **pickup**: The pickup location (string, minimum 3 characters).
+- **destination**: The destination location (string, minimum 3 characters).
+
+### Headers
+- `Authorization`: Bearer token (or token in cookies).
+
+### Success Response
+- **Status Code**: 200 OK
+- **Response Body**: 
+  - `fare`: Object containing fare details for different vehicle types.
+
+### Error Response
+- **Status Code**: 400 Bad Request
+- **Response Body**: 
+  - `errors`: Array of validation error messages.
+
+- **Status Code**: 500 Internal Server Error
+- **Response Body**: 
+  - `message`: Error message.
+
+### Example Response
+**Success Response Example:**
+```json
+{
+  "auto": 100,
+  "car": 150,
+  "moto": 80
+}
+```
+
+---
+
+# Maps Routes Documentation
+
+## GET /maps/get-coordinates
+### Description
+Fetches the geographical coordinates (latitude and longitude) for a given address.
+
+### Query Parameters
+- **address**: The address to fetch coordinates for (string, minimum 3 characters).
+
+### Headers
+- `Authorization`: Bearer token (or token in cookies).
+
+### Success Response
+- **Status Code**: 200 OK
+- **Response Body**: 
+  - `coordinates`: Object containing latitude and longitude.
+
+### Error Response
+- **Status Code**: 400 Bad Request
+- **Response Body**: 
+  - `errors`: Array of validation error messages.
+
+- **Status Code**: 404 Not Found
+- **Response Body**: 
+  - `message`: "Coordinates not found".
+
+### Example Response
+**Success Response Example:**
+```json
+{
+  "ltd": 28.7041,
+  "lng": 77.1025
+}
+```
+
+---
+
+## GET /maps/get-distance-time
+### Description
+Fetches the distance and estimated travel time between two locations.
+
+### Query Parameters
+- **origin**: The starting location (string, minimum 3 characters).
+- **destination**: The destination location (string, minimum 3 characters).
+
+### Headers
+- `Authorization`: Bearer token (or token in cookies).
+
+### Success Response
+- **Status Code**: 200 OK
+- **Response Body**: 
+  - `distance`: Object containing distance details.
+  - `duration`: Object containing duration details.
+
+### Error Response
+- **Status Code**: 400 Bad Request
+- **Response Body**: 
+  - `errors`: Array of validation error messages.
+
+- **Status Code**: 500 Internal Server Error
+- **Response Body**: 
+  - `message`: Error message.
+
+### Example Response
+**Success Response Example:**
+```json
+{
+  "distance": {
+    "text": "10 km",
+    "value": 10000
+  },
+  "duration": {
+    "text": "20 mins",
+    "value": 1200
+  }
+}
+```
+
+---
+
+## GET /maps/get-suggestions
+### Description
+Fetches autocomplete suggestions for a given input string.
+
+### Query Parameters
+- **input**: The input string to fetch suggestions for (string, minimum 3 characters).
+
+### Headers
+- `Authorization`: Bearer token (or token in cookies).
+
+### Success Response
+- **Status Code**: 200 OK
+- **Response Body**: 
+  - `suggestions`: Array of suggestion objects.
+
+### Error Response
+- **Status Code**: 400 Bad Request
+- **Response Body**: 
+  - `errors`: Array of validation error messages.
+
+- **Status Code**: 500 Internal Server Error
+- **Response Body**: 
+  - `message`: Error message.
+
+### Example Response
+**Success Response Example:**
+```json
+[
+  {
+    "description": "Dwarka Sector-14, Delhi",
+    "place_id": "ChIJd8BlQ2BZwokRAFUEcm_qrcA"
+  },
+  {
+    "description": "Connaught Place, Delhi",
+    "place_id": "ChIJL_P_CXMEDTkRw0ZdG-0GVvw"
+  }
+]
+```
