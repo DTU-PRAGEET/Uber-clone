@@ -11,6 +11,8 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { SocketContext } from '../context/SocketContext';
 import { UserDataContext } from '../context/UserContext';
+import { useNavigate } from 'react-router-dom';
+import LiveTracking from '../components/LiveTracking';
 
 const Home = () => {
 
@@ -42,6 +44,8 @@ const Home = () => {
     const [ vehicleType, setVehicleType ] = useState(null)
     const [ ride, setRide ] = useState(null)
 
+    const navigate = useNavigate();
+
     const {socket} = useContext(SocketContext);
     const {user} = useContext(UserDataContext);
 
@@ -49,6 +53,20 @@ const Home = () => {
         console.log(user);
         socket.emit('join', {userType: "user", userId: user._id});
     }, [user])
+
+    socket.on('ride-confirmed', ride => {
+
+        console.log(ride);
+
+        setVehicleFound(false);
+        setWaitingForDriver(true);
+        setRide(ride);
+    })
+
+    socket.on('ride-started', ride => {
+        setWaitingForDriver(false);
+        navigate('/riding', {state: {ride}})
+    })
 
 
     const handlePickupChange = async (e) => {
@@ -199,7 +217,8 @@ const Home = () => {
             <img className = 'w-16 absolute left-5 top-5' src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Uber_logo_2018.svg/2560px-Uber_logo_2018.svg.png'></img>
             <div className='h-screen w-screen'>
                 {/* image for temporary use */}
-                <img className = "h-full w-full object-cover" src = "https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif" alt=''></img>
+                <LiveTracking/>
+                {/* <img className = "h-full w-full object-cover" src = "https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif" alt=''></img> */}
             </div>
 
             <div className='flex flex-col justify-end h-screen absolute top-0 w-full '>
@@ -275,8 +294,9 @@ const Home = () => {
                 createRide={createRide}
                 pickup={pickup}
                 destination={destination}
-                vehicleType={vehicleType}
-                fare={fare} setFare={setFare} setConfirmRidePanel={setConfirmRidePanel} setVehicleFound={setVehicleFound} />
+                vehicleType={vehicleType} 
+                fare={fare} setFare={setFare}
+                setConfirmRidePanel={setConfirmRidePanel} setVehicleFound={setVehicleFound} />
             </div>
 
             <div ref = {vehicleFoundRef} className='fixed w-full z-10 bg-white bottom-0 translate-y-full p-3 py-6 px-3 pt-12'>
@@ -289,7 +309,13 @@ const Home = () => {
             </div>
 
             <div ref = {waitingForDriverRef} className='fixed w-full z-10 bg-white bottom-0 translate-y-full p-3 py-6 px-3 pt-12'>
-                <WaitingForDriver setVehicleFound={setVehicleFound} setWaitingForDriver={setWaitingForDriver} />
+                <WaitingForDriver 
+                ride={ride}
+                vehicleType={vehicleType} 
+                setVehicleFound={setVehicleFound}
+                setWaitingForDriver={setWaitingForDriver}
+                waitingForDriver={waitingForDriver}
+                />
             </div>
 
         </div>

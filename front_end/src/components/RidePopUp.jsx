@@ -51,6 +51,7 @@ const RidePopUp = (props) => {
                 <button 
                 onClick={(e)=>{
                     props.setConfirmRidePopupPanel(true);
+                    props.confirmRide();
                 }}
                 className='w-3/4 mt-5 p-2 bg-green-600 text-white font-semibold rounded-4xl border-2 border-green-50 active:border-black'>Accept
                 </button>

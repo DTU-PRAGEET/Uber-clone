@@ -7,9 +7,9 @@ let io;
 function initializeSocket(server) {
     io = socketIo(server, {
         cors: {
-            origin: '*',
-            methods: [ 'GET', 'POST' ]
-        }
+            origin: '*', // Ensure this matches your frontend's URL
+            methods: ['GET', 'POST'],
+        },
     });
 
     io.on('connection', (socket) => {
@@ -49,14 +49,13 @@ function initializeSocket(server) {
 }
 
 const sendMessageToSocketId = (socketId, messageObject) => {
+    console.log(`Sending message to socket ID: ${socketId}`, messageObject);
 
-    console.log(messageObject);
-    
-        if (io) {
-            io.to(socketId).emit(messageObject.event, messageObject.data);
-        } else {
-            console.log('Socket.io not initialized.');
-        }
+    if (io) {
+        io.to(socketId).emit(messageObject.event, messageObject.data);
+    } else {
+        console.log('Socket.io not initialized.');('Socket.io not initialized.');
     }
+}
 
 module.exports = { initializeSocket, sendMessageToSocketId };
